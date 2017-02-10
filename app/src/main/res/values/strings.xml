@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">GameApps</string>
+
+    <string name="tv_user_name">名字</string>
+    <string name="tv_user_email">邮箱 email@163.com</string>
+    <string name="tv_home">首页</string>
+    <string name="tv_setting">设置</string>
+    <string name="tv_theme">主题</string>
+    <string name="tv_scans">扫描</string>
+    <string name="tv_feedback">反馈</string>
+    <string name="tv_update">升级</string>
+    <string name="tv_about">关于</string>
+    <string name="tv_exit">退出</string>
+
+    <string-array name="tab_name">
+        <item>首页</item>
+        <item>应用</item>
+        <item>游戏</item>
+        <item>专题</item>
+        <item>推荐</item>
+        <item>分类</item>
+        <item>热门</item>
+    </string-array>
 </resources>
