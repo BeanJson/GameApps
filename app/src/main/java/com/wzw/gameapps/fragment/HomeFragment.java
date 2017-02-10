@@ -8,20 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.wzw.gameapps.global.LoadingPager;
+
 /**
  * Created by wuzhongwei on 2017/2/9.
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
 
+    //视图加载
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 创建视图的对象
+    protected View getSuccessView() {
         TextView mTextView = new TextView(getActivity());
-        // 设置当前的视图参数
-        mTextView.setText(this.getClass().getSimpleName());
-        // 返回当前的视图
+        mTextView.setText("哟哟切克闹!");
         return mTextView;
-
     }
+
+    //数据加载
+    @Override
+    protected Object getLoadData() {
+        return null;
+    }
+
 }

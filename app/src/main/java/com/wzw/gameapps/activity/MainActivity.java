@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         this.drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
         this.pagerSlidingTab = (PagerSlidingTab) findViewById(R.id.pagerSlidingTab);
         this.viewPager = (ViewPager) findViewById(R.id.viewPager);
-        adapter = new MainPagerAdapter(getSupportFragmentManager());
+        MainPagerAdapter adapter= new MainPagerAdapter(getSupportFragmentManager());
         this.viewPager.setAdapter(adapter);
         this.pagerSlidingTab.setViewPager(viewPager);
     }
