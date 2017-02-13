@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_listview_item"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/ic_default" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                style="@style/BaseTextStyle"
+                android:text="有缘网" />
+
+            <RatingBar
+                android:id="@+id/rb_star"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:isIndicator="true"
+                android:progressDrawable="@drawable/ratingbar_small" />
+
+            <TextView
+                android:id="@+id/tv_size"
+                style="@style/BaseFuTextStyle"
+                android:text="3.70MB" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="5dp"
+        android:background="#66666666" />
+
+    <TextView
+        android:id="@+id/tv_des"
+        style="@style/BaseFuTextStyle"
+        android:text="产品介绍啦,一二三十五六七,我的剑就是你的剑,贱贱贱贱" />
+</LinearLayout>

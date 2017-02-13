@@ -16,137 +16,123 @@ import com.wzw.gameapps.util.CommonUtils;
 
 public abstract class LoadingPager extends FrameLayout {
 
-    private Button btn_reload;
-
-    // 需要使用的枚举类型
+    //定义3种状态常量
     enum PageState {
-        STATE_LOADING, // 加载中
-        STATE_ERROR, // 加载失败
-        STATE_SUCCESS// 加载成功
+        STATE_LOADING,//加载中的状态
+        STATE_ERROR,//加载失败的状态
+        STATE_SUCCESS;//加载成功的状态
     }
 
-    // 定义当前的默认状态
-    private PageState mstate = PageState.STATE_LOADING;
-
-    // 需要使用的三个视图的操作
+    private PageState mState = PageState.STATE_LOADING;//表示界面当前的state，默认是加载中
     private View loadingView;
     private View errorView;
     private View successView;
 
-    // ====【构造方法】======
-    public LoadingPager(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        // 每一个构造方法当中,都去实现的方法
+
+    public LoadingPager(Context context) {
+        super(context);
         initLoadingPage();
     }
 
     public LoadingPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // 每一个构造方法当中,都去实现的方法
         initLoadingPage();
     }
 
-    public LoadingPager(Context context) {
-        super(context);
-        // 每一个构造方法当中,都去实现的方法
+    public LoadingPager(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
         initLoadingPage();
     }
 
-    /***
-     * 初始化当前的视图操作
+    /**
+     * 天然地往LoadingPage中添加3个view
      */
     private void initLoadingPage() {
-        // 定义当前的LayoutParams的状态
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT);
-        // 定义当前的进度条的View.视图填充器
-        // 判断上面是否是空值
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        //1.依次添加3个view对象
         if (loadingView == null) {
-            loadingView = View.inflate(getContext(), R.layout.page_loading,null);
-            // 添加到帧布局当中
-            addView(loadingView, params);
+            loadingView = View.inflate(getContext(), R.layout.page_loading, null);
         }
-        // 判断上面的是否是空值
+        addView(loadingView, params);
+
         if (errorView == null) {
-            // 创建视图
             errorView = View.inflate(getContext(), R.layout.page_error, null);
-            btn_reload = (Button) errorView.findViewById(R.id.btn_reload);
-            btn_reload.setOnClickListener(new View.OnClickListener() {
+            Button btn = (Button) errorView.findViewById(R.id.btn_reload);
+
+            btn.setOnClickListener(new OnClickListener() {
+                @Override
                 public void onClick(View v) {
-                    mstate = PageState.STATE_LOADING;
+                    //1、先显示loadingView，请求数据
+                    mState = PageState.STATE_LOADING;
                     showPage();
-                    //重新调用当前的加载数据刷新的操作
-                    LoadDataAndRefreshPage();
+                    //2、错误页面点击按钮刷新数据
+                    loadDataAndRefreshPage();
                 }
             });
         }
         addView(errorView, params);
+
         if (successView == null) {
-            // 需要自己去动态的添加显示的视图操作
-            successView = createSuccessView();
+            successView = createSuccessView();//需要不固定的successView
         }
-        // 判断当前的是否实现了当前的视图
         if (successView == null) {
-            throw new IllegalArgumentException(     // 抛出非法参数的异常
-                    "The method createSuccessView() can not null");
+            throw new IllegalArgumentException("The method createSuccessView() can not return null!");
         } else {
             addView(successView, params);
         }
+        //2.显示默认的loadingView
         showPage();
-        LoadDataAndRefreshPage();
+        //3.去请求数据然后刷新page
+        loadDataAndRefreshPage();
     }
 
+    /**
+     * 根据当前的mState显示对应的View
+     */
     private void showPage() {
+        //1.先隐藏所有的view
         loadingView.setVisibility(View.INVISIBLE);
         errorView.setVisibility(View.INVISIBLE);
         successView.setVisibility(View.INVISIBLE);
-        // 分支选择当前的状态
-        switch (mstate) {
-            case STATE_LOADING:
+        //2.谁的状态谁显示
+        switch (mState) {
+            case STATE_LOADING://加载中的状态
                 loadingView.setVisibility(View.VISIBLE);
                 break;
-            case STATE_ERROR:
+            case STATE_ERROR://加载失败的状态
                 errorView.setVisibility(View.VISIBLE);
                 break;
-            case STATE_SUCCESS:
+            case STATE_SUCCESS://加载成功的状态
                 successView.setVisibility(View.VISIBLE);
                 break;
         }
     }
-
-    // 等待着继承的实现构造方法.子类分别去实现各自的视图操作
-    public abstract View createSuccessView();
-
-    /***
-     * 去服务加载按数据.并且刷新当前的页面
-     */
-    private void LoadDataAndRefreshPage() {
-        // 开启子线程去加载数据
+    //多种行视图
+    //求情数据，根据请求的数据刷新界面
+    public void loadDataAndRefreshPage() {
         new Thread() {
+            @Override
             public void run() {
-                //测试耗时的操作
-                SystemClock.sleep(1500);
-                // 加载数据的操作
-                Object data = loadData();
-                // 得到加载的数据.判断当前的数据是否是空值.根据当前的值去判断是否加载成功
-                // 如果当前的结果是空值.那么就是加载失败.
-                // 如果当前的结果不是空值.那么就是加载成功.
-                mstate = (data == null ? PageState.STATE_ERROR
-                        : PageState.STATE_SUCCESS);
-                // 得到当前的状态之后.提交当前的数据.在主线程当中,实现界面刷新的操作
+                SystemClock.sleep(1000);
+                Object data = loadData();//驱使loadData方法的回调
+                //当前状态是否为空 ，空位error 有值success
+                mState = (data == null ? PageState.STATE_ERROR : PageState.STATE_SUCCESS);
                 CommonUtils.runOnUIThread(new Runnable() {
+                    @Override
                     public void run() {
-                        //提交数据到主线程
-                        showPage();
+                        showPage();//更新UI在子线程的主线程方法里面执行
                     }
                 });
             }
         }.start();
     }
-    //加载过程当中实现的方法
+
+    //加载的数据
     protected abstract Object loadData();
 
-
+    //获取SuccessView，因为每个请求成功的界面的数据都不一样，所以由每个页面自己获取对应的数据
+    public abstract View createSuccessView();
 }
+
 
 
